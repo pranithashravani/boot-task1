@@ -25,77 +25,64 @@ public class TrackServiceImplementation implements TrackService {
     }
 
     //implement all the methods
-    @Override
-    public boolean saveTrack(Track track) throws TrackAlreadyExists {
-        if(trackRepository.existsById(track.getId())) {
-            throw new TrackAlreadyExists("already exists");
-        }
-        Track tracksave = trackRepository.save(track);
-        if(tracksave==null)
-            throw new TrackAlreadyExists("already exists");
-        return true;
-
-
+ @Override
+  public Track saveTrack(Track track) throws TrackAlreadyExists {
+    try {
+      if (trackRepository.existsById(track.getId())) {
+        throw new TrackAlreadyExists("already exists");
+      }
+      Track tracksave = trackRepository.save(track);
+      if (tracksave == null)
+        throw new TrackAlreadyExists("already exists");
+      return track;
+    } catch (Exception TrackAlreadyExists) {
+      throw new TrackAlreadyExists("already exists");
     }
-
-    @Override
-    public boolean deleteTrack(int id) throws TrackNotFound {
-        if (getTrackById(id) == null) {
-            throw new TrackNotFound("the track is not found");
-
-        } else {
-
-            trackRepository.delete(getTrackById(id));
-            return true;
-        }
+  }
+  @Override
+  public Track deleteTrack(int id) throws TrackNotFound {
+    try {
+      TrackRepository.deleteTrack(id);
+      TrackService service = null;
+      return service.getTrackById(id);
+    }catch (Exception TrackNotFound)
+    {
+      throw new TrackNotFound("the track is not found");
     }
-
-    @Override
-    public List<Track> getAllTracks() throws TrackNotFound {
-        if(trackRepository.findAll()==null)
-            throw new TrackNotFound("this track is not found");
-        return trackRepository.findAll();
+  }
+  @Override
+  public List<Track> getAllTracks() throws TrackNotFound {
+      if (trackRepository.findAll() == null)
+        throw new TrackNotFound("this track is not found");
+      return trackRepository.findAll();
     }
-
-    @Override
-    public Track getTrackById(int id) throws TrackNotFound{
-
-        Optional<Track> trackbyid = trackRepository.findById(id);
-
-        if (trackbyid.isPresent()) {
-            return trackbyid.get();
-        }
-        else
+  @Override
+  public Track getTrackById(int id) throws TrackNotFound {
+    Optional<Track> trackbyid = trackRepository.findById(id);
+      if (trackbyid.isPresent()) {
+        return trackbyid.get();
+      } else
         throw new TrackNotFound("the track is not found");
     }
-
-    @Override
-    public boolean UpdateTrack(Track track) throws TrackAlreadyExists {
-        Track updatetrack = trackRepository.findById(track.getId()).get();
-
-        if (updatetrack != null) {
-            //Track newEntity = track.get();
-
-            updatetrack.setId(track.getId());
-            updatetrack.setName(track.getName());
-            updatetrack.setComment(track.getComment());
-
-             trackRepository.save(updatetrack);
-
-            return true;
-        } else {
-            throw new TrackAlreadyExists("already exists");
-        }
+  @Override
+  public Track UpdateTrack(Track track) throws TrackAlreadyExists {
+    Track updatetrack = trackRepository.findById(track.getId()).get();
+    try {
+      if (updatetrack != null) {
+        //Track newEntity = track.get();
+        updatetrack.setId(track.getId());
+        updatetrack.setName(track.getName());
+        updatetrack.setComment(track.getComment());
+        trackRepository.save(updatetrack);
+        return updatetrack;
+      } else {
+        throw new TrackAlreadyExists("already exists");
+      }
+    } catch (Exception TrackAlreadyExists) {
+      throw new TrackAlreadyExists("already exists");
     }
-   @Override
-    public List<Track> getTrackByName(String name)
-    {
-     List<Track> found=trackRepository.getTrackByName(name);
-     return found;
-    }
-
+  }
 }
-
 
 
 

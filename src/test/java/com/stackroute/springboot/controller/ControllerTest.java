@@ -89,7 +89,7 @@ public class ControllerTest {
     public void deleteTrack() throws Exception
     {
 
-        when(trackService.deleteTrack(anyInt())).thenReturn(true);
+        when(trackService.deleteTrack(anyInt())).thenReturn(track);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/deleteTrack")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -99,7 +99,7 @@ public class ControllerTest {
     public void updateTrack() throws Exception
     {
 
-        when(trackService.UpdateTrack(any())).thenReturn(true);
+        when(trackService.UpdateTrack(any())).thenReturn(track);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/track/1")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
